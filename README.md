@@ -19,6 +19,14 @@ This repository archives the documentation for various projects I've built using
 
 ---
 
+## Deployed Documentation Sites
+
+| Project | Documentation |
+|---------|---|
+| **InteFL** | [ajbarea.github.io/phalanx-fl](https://ajbarea.github.io/phalanx-fl/) |
+| **Kourai Khryseai** | [ajbarea.github.io/kourai-khryseai](https://ajbarea.github.io/kourai-khryseai/) |
+| **Cosmic Horror** | [victor-lockwood.github.io/Hackathon-2026-Cosmic-Horror](https://victor-lockwood.github.io/Hackathon-2026-Cosmic-Horror/) |
+
 ---
 
 ## Documentation Archive
@@ -84,16 +92,6 @@ This repository archives the documentation for various projects I've built using
 | **Engine** | Direct neural synthesis via FluidSynth — no DAW, no external host |
 
 **Tech Stack:** BioRadio · RandomForest (gesture classification) · FluidSynth · MIDI · Python · RIT BioRadio Hackathon 2026
-
----
-
-## Deployed Documentation Sites
-
-| Project | Documentation |
-|---------|---|
-| **InteFL** | [ajbarea.github.io/phalanx-fl](https://ajbarea.github.io/phalanx-fl/) |
-| **Kourai Khryseai** | [ajbarea.github.io/kourai-khryseai](https://ajbarea.github.io/kourai-khryseai/) |
-| **Cosmic Horror** | [victor-lockwood.github.io/Hackathon-2026-Cosmic-Horror](https://victor-lockwood.github.io/Hackathon-2026-Cosmic-Horror/) |
 
 ---
 
