@@ -92,9 +92,7 @@ get_agent_url("techne")  # (2)!
 ```
 
 1. Returns model based on `KOURAI_MODEL_TIER` — e.g. `"anthropic/claude-opus-4-6"` on smart, Haiku on cheap (default)
-2. Returns `"http://localhost:10002/"` locally, or Docker service name when `KOURAI_AGENT_HOST=true`
-
-`KOURAI_AGENT_HOST=true` switches URL resolution from `localhost:PORT` to `servicename:PORT` for Docker networking.
+2. Returns `"http://techne:10002/"` — agents resolve each other via Docker service names
 
 ### `llm.py` — Model-Agnostic LLM Interface
 
@@ -201,7 +199,7 @@ Kourai Khryseai persists the entire conversation history to a local SQLite datab
 
 **Location:** `.cache/agent_memory.db`
 
-The database implements 2026 Best Practices for A2A Memory (Hierarchical State Management) with two primary tables:
+The database implements A2A Memory (Hierarchical State Management) with two primary tables:
 
 - **`messages`**: Episodic/working memory. Stores every single message exchanged, tracking the `context_id` (thread), `agent_name`, `role`, and the raw `content`.
 - **`agent_states`**: Semantic memory. Stores structured state objects (goal hierarchies, checkpoints, summaries) for each agent and thread.

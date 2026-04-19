@@ -24,6 +24,7 @@ This repository archives the documentation for various projects I've built using
 | Project | Documentation |
 |---------|---|
 | **InteFL** | [ajbarea.github.io/phalanx-fl](https://ajbarea.github.io/phalanx-fl/) |
+| **VelocityFL** | [ajbarea.github.io/vFL](https://ajbarea.github.io/vFL/) |
 | **Kourai Khryseai** | [ajbarea.github.io/kourai-khryseai](https://ajbarea.github.io/kourai-khryseai/) |
 | **Cosmic Horror** | [victor-lockwood.github.io/Hackathon-2026-Cosmic-Horror](https://victor-lockwood.github.io/Hackathon-2026-Cosmic-Horror/) |
 
@@ -36,6 +37,7 @@ This repository archives the documentation for various projects I've built using
 **Federated learning execution and research framework**
 
 - 🚀 [Get Started](intefl/docs/getting-started.md) — Install with Docker or locally
+- 🧭 [CLI Reference](intefl/docs/cli.md) — Command overview and examples
 - 🏗️ [Architecture](intefl/docs/architecture.md) — API, Celery, Flower, React UI
 - ⚙️ [Configuration](intefl/docs/configuration.md) — StrategyConfig field reference
 - 📊 [Datasets](intefl/docs/datasets.md) — FEMNIST, FLAIR, MedMNIST, HuggingFace text
@@ -55,8 +57,11 @@ This repository archives the documentation for various projects I've built using
 - 💡 [How It Works](kourai-khryseai/docs/overview.md) — The A2A protocol and agent architecture
 - ⚙️ [Configuration](kourai-khryseai/docs/configuration.md) — Environment variables and settings
 - 🔧 [CLI Guide](kourai-khryseai/docs/cli.md) — Command usage and pipelines
+- 🖥️ [GUI Reference](kourai-khryseai/docs/gui.md) — Pygame GUI interface
+- 📖 [VN Reference](kourai-khryseai/docs/vn.md) — Ren'Py visual novel interface
 - 🏗️ [Architecture](kourai-khryseai/docs/architecture/index.md) — System design and layers
 - 🧠 [Agents](kourai-khryseai/docs/agents/index.md) — Hephaestus, Metis, Techne, Dokimasia, Kallos, Mneme
+- 💰 [Pricing](kourai-khryseai/docs/pricing.md) — Cost model and token budgets
 
 **The Agents:**
 
@@ -70,6 +75,25 @@ This repository archives the documentation for various projects I've built using
 | 📜 | **Mneme** | Scribe — generates conventional commit messages from diffs | :10005 |
 
 **Tech Stack:** A2A Protocol · LiteLLM · FastAPI · MCP · OpenTelemetry · Docker · uv · Python 3.12+
+
+---
+
+### VelocityFL
+
+**Federated learning project documentation**
+
+- 🚀 [Get Started](vfl/docs/getting-started.md) — Install and run your first simulation
+- 🧭 [CLI Reference](vfl/docs/cli.md) — Command overview and examples
+- 🏗️ [Architecture](vfl/docs/architecture.md) — Rust core, Python bridge, and execution flow
+- ⚙️ [Configuration](vfl/docs/configuration.md) — Runtime settings and defaults
+- 🛡️ [Strategies](vfl/docs/strategies.md) — Aggregation strategies and behavior
+- ⚡ [Attacks](vfl/docs/attacks.md) — Fault and adversarial scenario modeling
+- 📡 [API Reference](vfl/docs/api.md) — Programmatic interface details
+- 📊 [Convergence](vfl/docs/convergence.md) — Stability and convergence notes
+- 🏁 [Benchmarks](vfl/docs/benchmarks.md) — Performance and scaling observations
+- 🧠 [Skills](vfl/docs/skills.md) — Project skill documentation
+
+**Tech Stack:** Rust · Python · pyo3 · Zensical
 
 ---
 
@@ -113,6 +137,8 @@ zensical-projects/
 │   ├── docs/                    # Zensical documentation site
 │   ├── src/                     # Signal processing, gesture classification, MIDI engine
 │   └── data/                    # Playlists and gesture models
+├── vfl/
+│   └── docs/                    # Zensical documentation site
 └── README.md
 ```
 

@@ -4,7 +4,7 @@
 
 ### Distributed Tracing
 
-Every A2A call creates an OpenTelemetry span. W3C Trace Context headers are propagated via A2A message `metadata`, allowing Jaeger to stitch traces across all six agents into a single view.
+Every A2A call creates an OpenTelemetry span. W3C Trace Context headers are propagated via A2A message `metadata`, allowing Jaeger to stitch traces across all ten agents into a single view.
 
 **Span naming convention:**
 
@@ -27,6 +27,14 @@ Open [`localhost:16686`](http://localhost:16686) and select any service:
 - **Error locations** — Which agent failed and at which operation
 - **Fix loop iterations** — How many Kallos-Techne rounds were needed
 
+### 📊 Service Performance Monitoring (SPM)
+
+Jaeger generates RED metrics (Rate, Error, Duration) from traces and stores them in Prometheus. This enables the "Monitor" tab in the Jaeger UI for high-level service health visualization.
+
+- **RED Metrics** — Instant visibility into request volume, error percentages, and latency percentiles (P50, P95, P99).
+- **Metric Exploration** — Use the Prometheus UI at [`localhost:9090`](http://localhost:9090) for raw PromQL queries and custom dashboarding.
+- **Span-to-Metrics** — Jaeger's internal collector generates these metrics in real-time as traces arrive via OTLP.
+
 ---
 
 ## 🐳 Infrastructure
@@ -43,17 +51,7 @@ Multi-stage build: builder installs deps with `uv`, runtime copies only the venv
 
 ### Docker Compose
 
-`docker-compose.yml` defines all agents + infrastructure with profiles:
-
-- **No profile** — Jaeger + Prometheus only
-- **`agents`** — All five specialists
-- **`full`** — Specialists + Hephaestus (depends on all others)
-
-Environment variable `KOURAI_AGENT_HOST=true` is set automatically in Docker, switching URL resolution to service names.
-
-### Terraform
-
-`infra/terraform/main.tf` uses the `kreuzwerker/docker` provider for local container management. Designed to be swappable — replace the Docker provider with AWS ECS, GCP Cloud Run, or Kubernetes when you're ready for production.
+`docker-compose.yml` defines all ten agents + infrastructure. `docker compose up` brings everything up — agents resolve each other via Docker service names (e.g., `http://hephaestus:10000`).
 
 ---
 
@@ -98,3 +96,4 @@ Environment variable `KOURAI_AGENT_HOST=true` is set automatically in Docker, sw
 - [uv](https://docs.astral.sh/uv/)
 - [OpenTelemetry Python](https://opentelemetry.io/docs/languages/python/)
 - [Jaeger](https://www.jaegertracing.io/)
+- [Prometheus](https://prometheus.io/)

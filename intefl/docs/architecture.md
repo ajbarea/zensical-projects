@@ -5,7 +5,6 @@
 ```mermaid
 flowchart TD
     UI["React / Vite UI<br/>port 5173 (dev) / 80 (prod via nginx)"]
-    Docs["Zensical<br/>Documentation · port 8080"]
     API["FastAPI Backend<br/>intellifl.api · port 8000"]
     Redis[(Redis<br/>redis-data volume)]
     Celery["Celery Worker<br/>intellifl.celery_app"]
@@ -17,7 +16,6 @@ flowchart TD
     Clients["FlowerClient × N<br/>train + evaluate"]
 
     UI -->|HTTP / SSE| API
-    Docs -->|HTTP| Markdown
     API -->|task.delay| Redis
     Redis --> Celery
     Celery --> SR
@@ -51,7 +49,7 @@ Orchestrates a single strategy run:
 
 - Selects the correct **dataset loader** and **network model** based on `dataset_keyword`
 - Selects the correct **aggregation strategy** based on `aggregation_strategy_keyword`
-- Wraps the strategy and clients in Flower's `ServerApp` / `ClientApp` and calls `run_simulation()`
+- Wraps the strategy and clients in Flower's `ServerApp` / `ClientApp` and launches Flower's simulation engine
 - After the run, optionally generates attack snapshot HTML reports
 
 ### `flower_client.py`
@@ -73,7 +71,7 @@ FastAPI application with routers for:
 
 | Router | Purpose |
 |---|---|
-| :material-play-circle: `simulations` | List, inspect, launch, stop, rename, delete simulations; stream status and logs via SSE |
+| :material-play-circle: `simulations` | List, inspect, launch, stop, rename, delete simulations; stream status and logs via Server-Sent Events (SSE) |
 | :material-tray-full: `queue` | Get aggregate queue status counts |
 | :material-chart-line: `visualizations` | Fetch plot data JSON and attack snapshot metadata |
 | :material-database-check: `datasets` | Validate HuggingFace datasets |
@@ -81,9 +79,12 @@ FastAPI application with routers for:
 | :material-console: `terminal` | Interactive PTY terminal over WebSocket |
 | :material-robot: `assistant` | AI agent chat endpoint |
 
+!!! info "Real-time Streaming"
+    The simulations endpoint streams live updates via SSE using named events (`status` and `output`). The UI subscribes to these events to display real-time progress without polling. Output logs are streamed line-by-line as they're written to disk.
+
 ### `status_tracker.py`
 
-Writes a `status.json` file into the simulation output directory. Transitions: `queued → running → completed / failed / stopped`. The UI polls this file (and the SSE stream) to display live progress.
+Writes a `status.json` file into the simulation output directory. This is the **sole writer** of status updates — all transitions (`queued → running → completed / failed / stopped`) go through `StatusTracker`, ensuring consistency and preventing race conditions. The UI polls this file and listens to SSE `status` events to display live progress.
 
 ---
 
@@ -95,7 +96,7 @@ flowchart TD
     S2["2. StrategyConfig validated by Pydantic"]
     S3["3. DatasetHandler partitions dataset → N client shards"]
     S4["4. FederatedSimulation initialises loaders,<br/>model, strategy, and Flower apps"]
-    S5["5. run_simulation() launches Ray actors"]
+    S5["5. Flower simulation engine launches Ray actors"]
     Round["For each round<br/>a&#41; Server sends global params<br/>b&#41; Clients train locally<br/>c&#41; Clients apply attack (opt.)<br/>d&#41; Strategy aggregates updates<br/>e&#41; Metrics recorded to history"]
     S6["6. SimulationStrategyHistory → CSV"]
     S7["7. Plots generated and saved"]
@@ -162,6 +163,8 @@ out/
 
     - `docker-compose.yml` (base only, no override)
 
+    **Start:** `docker compose -f docker-compose.yml up -d`
+
     **Services:**
 
     - `api`: FastAPI without `--reload`
@@ -176,8 +179,6 @@ out/
     - `./datasets`: Mounted RW for downloaded datasets
     - `./config`: Mounted RO for strategy configs
     - `redis-data`: Named volume for Redis persistence (survives container restarts)
-
-    **Network:** `default` — User-defined bridge network (auto-removed on `docker compose down`)
 
 ---
 
@@ -211,4 +212,3 @@ When you submit a simulation via the REST API:
 !!! info "Fallback mode"
 
     If Redis is unavailable, the API dispatches simulations as subprocess tasks instead of Celery tasks. The UI still works; queuing is just unavailable.
-

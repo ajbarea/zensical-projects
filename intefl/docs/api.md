@@ -3,9 +3,9 @@
 The InteFL backend is a FastAPI application running on port `8000`. Start it with:
 
 ```bash title="Start the API server"
-make dev
+uv run intellifl-dev dev
 # or directly:
-uvicorn intellifl.api.main:app --reload
+uv run uvicorn intellifl.api.main:app --reload
 ```
 
 !!! tip "Interactive docs"
@@ -227,6 +227,12 @@ Validate whether a HuggingFace dataset exists and is compatible.
 ---
 
 ## :material-heart-pulse: System
+
+### `GET /`
+
+Root endpoint. Returns a simple JSON message confirming the API is running.
+
+---
 
 ### `GET /api/health`
 
