@@ -37,6 +37,7 @@ This repository archives the documentation for various projects I've built using
 **Federated learning execution and research framework**
 
 - 🚀 [Get Started](intefl/docs/getting-started.md) — Install with Docker or locally
+- 🧭 [CLI Reference](intefl/docs/cli.md) — Command overview and examples
 - 🏗️ [Architecture](intefl/docs/architecture.md) — API, Celery, Flower, React UI
 - ⚙️ [Configuration](intefl/docs/configuration.md) — StrategyConfig field reference
 - 📊 [Datasets](intefl/docs/datasets.md) — FEMNIST, FLAIR, MedMNIST, HuggingFace text
@@ -56,8 +57,11 @@ This repository archives the documentation for various projects I've built using
 - 💡 [How It Works](kourai-khryseai/docs/overview.md) — The A2A protocol and agent architecture
 - ⚙️ [Configuration](kourai-khryseai/docs/configuration.md) — Environment variables and settings
 - 🔧 [CLI Guide](kourai-khryseai/docs/cli.md) — Command usage and pipelines
+- 🖥️ [GUI Reference](kourai-khryseai/docs/gui.md) — Pygame GUI interface
+- 📖 [VN Reference](kourai-khryseai/docs/vn.md) — Ren'Py visual novel interface
 - 🏗️ [Architecture](kourai-khryseai/docs/architecture/index.md) — System design and layers
 - 🧠 [Agents](kourai-khryseai/docs/agents/index.md) — Hephaestus, Metis, Techne, Dokimasia, Kallos, Mneme
+- 💰 [Pricing](kourai-khryseai/docs/pricing.md) — Cost model and token budgets
 
 **The Agents:**
 

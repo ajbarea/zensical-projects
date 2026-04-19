@@ -1,5 +1,15 @@
 # Getting Started
 
+Kourai Khryseai works as a **real-time conversation** with ten AI specialists. You describe what you need, they ask clarifying questions, show their work as they build it, and iterate based on your feedback. Three paths to the same system:
+
+- **CLI** — Fast, scriptable, terminal-based
+- **GUI** — Rich desktop experience with agent portraits, TTS, and visual effects
+- **VN** — Dating-sim inspired visual novel with affinity, romance, and character progression
+
+All three are equally capable and connect to the same Docker-hosted agent backend. Pick whichever fits your workflow.
+
+---
+
 ## Prerequisites
 
 | Requirement | Version | Notes |
@@ -67,40 +77,35 @@ make up              # Build images + start full stack (waits for healthy servic
 make status          # Show service state/health
 ```
 
-Docker Compose profiles for fine control:
+Start everything:
 
-=== "Full Stack (recommended)"
+```bash
+docker compose up
+```
 
-    ```bash
-    docker compose --profile full up
-    ```
-    All six agents + Jaeger + Prometheus.
+All ten agents + Jaeger + Prometheus.
 
-=== "Specialists Only"
+To start a single agent (plus its dependencies):
 
-    ```bash
-    docker compose --profile agents up
-    ```
-    Five specialists without Hephaestus orchestrator.
+```bash
+docker compose up mneme
+```
 
-=== "Observability Only"
+For just Jaeger trace inspection:
 
-    ```bash
-    docker compose up jaeger
-    ```
-    Just Jaeger for trace inspection.
+```bash
+docker compose up jaeger
+```
 
 ---
 
 ## Your First Request
 
-Launch the interactive CLI:
+### :octicons-terminal-24: Option 1: CLI
 
 ```bash
 make cli
 ```
-
-You'll see the Kourai Khryseai banner and a prompt:
 
 ```
 ╔══════════════════════════════════════════╗
@@ -110,76 +115,69 @@ Type your request. Commands: :q (quit), :status (agent info)
 
 Connecting to Hephaestus at http://localhost:10000/...
 Connected to Hephaestus — Orchestrator v0.1.0
-Skills: Route Development Request, Execute Development Pipeline
 
-kourai:
+❯ implement CSV export with tests
 ```
 
-Type a request in plain English:
+Hephaestus automatically routes your request to the right pipeline. You'll see real-time progress with agent emojis as each step completes.
 
-```bash
-# Full pipeline: plan → code → test → lint → commit messages
-kourai: implement CSV export with tests
+See the [CLI Reference](cli.md) for all commands.
 
-# Fix a bug
-kourai: fix the null check in auth.py
-
-# Add tests
-kourai: add tests for the payment module
-
-# Style cleanup
-kourai: clean up comments in src/utils/
-
-# Just commit messages
-kourai: commit prep
-```
-
-Hephaestus automatically routes your request to the right pipeline of specialists. You'll see real-time progress with agent emojis as each step completes.
-
-See the [CLI Reference](cli.md) for all commands and options.
-
-### Using the GUI
-
-For a richer, visual experience, launch the full-screen GUI:
+### :octicons-device-desktop-24: Option 2: Pygame GUI
 
 ```bash
 make gui
 ```
 
-This opens an anime-styled visual interface with:
-- **Full-color portraits** of each agent (1280×720 JRPG aesthetic)
-- **Dialogue bubbles** with real-time responses
+Opens a full-screen JRPG-styled interface with:
+- **Full-color portraits** of each agent with glow effects and crossfade transitions
+- **Dialogue bubbles** with real-time streaming responses
 - **Personality-matched voices** with neural speech synthesis
-- **Scrollable chat history** with agent switching
+- **Golden particle effects** and typewriter text animation
 - **Settings overlay** for voice customization and accessibility
 
-The GUI speaks all agent responses through natural neural voices (Microsoft Edge TTS with real-time volume/pitch control).
+??? tip "WSL2 audio prerequisites (TTS, music, ambient)"
 
-#### Quick TTS Test
+    WSLg routes audio through PulseAudio (`PULSE_SERVER`), but your distro still needs Pulse runtime libs:
 
-```python title="Quick voice demo"
-from hosts.gui.tts_engine import TTSEngine
-import asyncio
+    ```bash
+    sudo apt update
+    sudo apt install -y libpulse0 pulseaudio-utils libpipewire-0.3-0 espeak-ng
+    ```
 
-async def demo():
-    engine = TTSEngine(master_volume=0.8)
-    for agent in ['kallos', 'metis', 'hephaestus']:
-        print(f'Speaking as {agent}...')
-        await engine.speak(f'Hello! I am {agent}.', agent_name=agent)
-    engine.cleanup()
+    If SDL picks the wrong backend, force PulseAudio for the GUI process:
 
-asyncio.run(demo())
+    ```bash
+    SDL_AUDIODRIVER=pulseaudio make gui
+    ```
+
+See the [GUI Reference](gui.md) for keyboard shortcuts, visual effects, and TTS configuration.
+
+### :octicons-book-24: Option 3: Ren'Py Visual Novel
+
+```bash
+cd hosts/vn/renpy-8.5.2-sdk
+./renpy.sh ../kourai_vn    # Linux/Mac
+renpy.exe ..\kourai_vn     # Windows
 ```
 
-See [GUI Reference → Text-to-Speech System](gui.md#text-to-speech-system-) for voice customization, personality profiles, and advanced audio options.
+Opens a Ren'Py visual novel with:
+- **Warm forge aesthetic** — gold, cream, charcoal
+- **Affinity HUD** — tracks your relationship tier with each agent
+- **Gossip system** — idle agents share personality-driven flavor text
+- **Choice events** — agents present choices that affect affinity
+- **Full save/load** — portrait thumbnails, conversation context, bridge reconnect
+
+See the [VN Reference](vn.md) for architecture, screens, and troubleshooting.
 
 ---
 
-## Viewing Traces
+## Viewing Traces & Metrics
 
-Every request creates a distributed trace across all agents. Jaeger starts automatically with `make up`.
+Every request creates a distributed trace across all agents and generates performance metrics. Both Jaeger and Prometheus start automatically with `make up`.
 
-Open the Jaeger UI at [`localhost:16686`](http://localhost:16686) and select any agent from the service dropdown to see its spans, timings, and any errors.
+- **Jaeger** — Trace inspection at [`localhost:16686`](http://localhost:16686). Select any agent from the service dropdown to see its spans, timings, and any errors.
+- **Prometheus** — Metric inspection at [`localhost:9090`](http://localhost:9090). View RED metrics (Rate, Error, Duration) across all services.
 
 ---
 
@@ -213,10 +211,22 @@ make down
 
     All CLI commands, options, and keyboard shortcuts
 
+-   :material-gamepad-variant:{ .lg .middle } **[VN Reference](vn.md)**
+
+    ---
+
+    Ren'Py visual novel architecture and features
+
 -   :material-cog:{ .lg .middle } **[Configuration](configuration.md)**
 
     ---
 
     Environment variables, model assignments, timeouts
+
+-   :material-currency-usd:{ .lg .middle } **[Pricing](pricing.md)**
+
+    ---
+
+    Cost breakdown per provider and tier
 
 </div>

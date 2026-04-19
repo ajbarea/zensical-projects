@@ -20,14 +20,14 @@ Simulations are controlled entirely by a single JSON file. The file has two top-
 
 ## :material-test-tube: Example
 
-```json title="example_strategy_config.json"
+```json title="Minimal multi-strategy example"
 {
   "shared_settings": {
     "aggregation_strategy_keyword": "pid_standardized",
     "dataset_keyword": "femnist_iid",
     "num_of_rounds": 10,
     "num_of_clients": 5,
-    "num_of_malicious_clients": 2,
+    "num_of_malicious_clients": 1,
     "training_device": "cpu",
     "cpus_per_client": 1,
     "gpus_per_client": 0.0,
@@ -44,7 +44,21 @@ Simulations are controlled entirely by a single JSON file. The file has two top-
 }
 ```
 
-This runs two strategies back-to-back, differing only in `num_std_dev`.
+This runs two strategies back-to-back, differing only in `num_std_dev`. See `config/simulation_strategies/example_strategy_config.json` for a full example with all 11 attack types.
+
+---
+
+## :material-shield-search: Research Integrity & Validation
+
+InteFL enforces a **Scientific Integrity First** policy. To ensure experimental transparency and reproducibility (aligned with IEEE Std and NeurIPS/ICML checklists), the framework uses a "fail-fast" validation approach: it **rejects** incompatible or mathematically unsound configurations rather than attempting to silently auto-correct them.
+
+### Key Constraints
+
+*   **Participation vs. Removal:** You cannot set `remove_clients: true` if your configuration requires 100% participation (e.g., `min_fit_clients == num_of_clients`). It is mathematically impossible to maintain full participation if clients are being permanently excluded.
+*   **Byzantine Tolerance Bounds:** robust aggregation algorithms have strict breakdown points.
+    *   **Krum / Multi-Krum:** Requires $n > 2f + 2$ (where $n$ is total clients and $f$ is malicious clients).
+    *   **Trimmed Mean:** Requires `trim_ratio < 0.5`.
+    *   Violating these bounds removes the theoretical guarantees of the defense and leads to undefined behavior.
 
 ---
 
@@ -59,13 +73,13 @@ This runs two strategies back-to-back, differing only in `num_std_dev`.
 | `aggregation_strategy_keyword` | `string` | — | Which strategy. See [Strategies](strategies.md). |
 | `num_of_rounds` | `int` | — | Total FL rounds to run. |
 | `num_of_clients` | `int` | — | Total virtual clients. |
-| `num_of_malicious_clients` | `int` | `0` | How many clients are treated as potentially malicious. |
+| `num_of_malicious_clients` | `int` | `1` | How many clients are treated as potentially malicious. |
 | `training_device` | `string` | — | `"cpu"`, `"cuda"`, or `"gpu"` (alias for `cuda`). |
 | `cpus_per_client` | `float` | — | CPU cores allocated to each Ray worker. |
 | `gpus_per_client` | `float` | — | GPU fraction allocated to each Ray worker (`0.0`–`1.0`). |
-| `model_keyword` | `string` | `null` | Override the default network model for a dataset. |
 | `model_type` | `string` | `"cnn"` | `"cnn"` or `"transformer"`. |
 | `use_llm` | `bool` | `false` | Enable transformer-based training path. |
+| `strict_mode` | `bool` | `null` | Enable strict validation that rejects incompatible configs (e.g., full participation + client removal). |
 
 ### :material-brain: Training
 
@@ -87,18 +101,18 @@ This runs two strategies back-to-back, differing only in `num_std_dev`.
 
 ### :material-bug-outline: Attack schedule
 
-See the [Attacks](attacks.md) page for full documentation.
+See the [Attacks](attacks.md) page for full documentation of all 11 attack types (data and model poisoning).
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| `attack_schedule` | `array` | `[]` | List of attack entries. Required in config (use `[]` for no attacks). |
+| `attack_schedule` | `array` | `[]` | List of attack entries. Each entry specifies start/end rounds, attack type, client selection strategy, and attack-specific parameters. Required in config (use `[]` for no attacks). |
 
 ### :material-account-remove: Client removal
 
 | Field | Type | Default | Description |
 |---|---|---|---|
 | `remove_clients` | `bool` | `false` | Enable permanent removal of detected malicious clients. |
-| `begin_removing_from_round` | `int` | `null` | Only start removing from this round onwards. |
+| `begin_removing_from_round` | `int` | `0` | Only start removing from this round onwards. |
 | `termination_policy` | `string` | `"graceful"` | `"strict"`, `"graceful"`, or `"adaptive"`. Controls behaviour when too many clients have been removed. |
 | `min_clients_ratio` | `float` | `0.3` | For `"adaptive"` policy: stop removing if fewer than this fraction of clients remain. |
 
@@ -112,7 +126,7 @@ See the [Attacks](attacks.md) page for full documentation.
 | `preserve_dataset` | `bool` | — | Keep partitioned dataset files after the simulation. |
 | `save_attack_snapshots` | `bool` | `false` | Save before/after data snapshots for attacked clients. |
 | `attack_snapshot_format` | `string` | `"pickle"` | `"pickle"`, `"visual"`, or `"pickle_and_visual"`. |
-| `snapshot_max_samples` | `int` | `5` | Max samples included in each snapshot. |
+| `snapshot_max_samples` | `int` | `6` | Max samples included in each snapshot. |
 
 ### :material-tune-variant: Strategy-specific parameters
 
@@ -144,6 +158,12 @@ See the [Attacks](attacks.md) page for full documentation.
 |---|---|---|
 | `trim_ratio` | `float` | Fraction of extreme updates trimmed from each end. |
 
+#### General
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `num_of_clusters` | `int` | `null` | Reserved. Number of strategy clusters (currently capped at `1`). |
+
 ### :fontawesome-solid-robot: HuggingFace / custom text datasets
 
 | Field | Type | Default | Description |
@@ -166,3 +186,6 @@ See the [Attacks](attacks.md) page for full documentation.
 | `llm_finetuning` | `string` | `null` | `"lora"` to use LoRA adapters instead of full fine-tuning. |
 | `use_lora` | `bool` | `false` | Alternative boolean flag to enable LoRA (equivalent to `llm_finetuning: "lora"`). |
 | `lora_rank` | `int` | `8` | LoRA rank `r`. |
+| `lora_alpha` | `int` | `16` | LoRA scaling factor (`alpha / rank` controls adaptation strength). |
+| `lora_dropout` | `float` | `0.05` | Dropout applied to LoRA layers. |
+| `lora_target_modules` | `array` | `null` | List of module names to apply LoRA to (e.g. `["query", "value"]`). Defaults to model-specific modules. |

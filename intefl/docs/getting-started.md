@@ -12,10 +12,8 @@ The fastest way to run InteFL. Docker Compose brings up the full stack — API, 
 === ":material-server-network: Production"
 
     ```bash title="Start in production mode"
-    make prod
+    docker compose -f docker-compose.yml up -d
     ```
-
-    > Runs `docker compose -f docker-compose.yml up -d`
 
     | Service | URL | Description |
     |---|---|---|
@@ -26,12 +24,10 @@ The fastest way to run InteFL. Docker Compose brings up the full stack — API, 
 === ":material-code-braces: Development"
 
     ```bash title="Start in development mode"
-    make dev
+    uv run intellifl-dev dev
     ```
 
-    > Runs `docker compose up`
-
-    Automatically applies `docker-compose.override.yml`, which enables:
+    > Runs `docker compose up` through the project's cross-platform developer CLI and automatically applies `docker-compose.override.yml`
 
     | Service | URL | Description |
     |---|---|---|
@@ -42,11 +38,9 @@ The fastest way to run InteFL. Docker Compose brings up the full stack — API, 
 
 **Common commands:**
 
-```bash title="Useful make targets"
-make dev                         # Start all services in dev mode (hot reload, Celery monitoring)
-make dev-down                    # Stop dev services
-make prod                        # Start all services in production mode (detached)
-make prod-down                   # Stop prod services
+```bash title="Useful local commands"
+uv run intellifl-dev dev         # Start all services in dev mode (hot reload, Celery monitoring)
+uv run intellifl-dev dev-down    # Stop all services
 docker compose logs -f           # Tail logs from all services
 docker compose logs -f api       # Tail logs from the API service only
 ```
@@ -61,8 +55,12 @@ docker compose logs -f api       # Tail logs from the API service only
 
 The project ships a `.env.example` with sensible defaults. Copy it to `.env` before your first run:
 
-```bash title="Create .env file"
+```bash title="Create .env file (macOS / Linux / Git Bash)"
 cp .env.example .env
+```
+
+```powershell title="Create .env file (PowerShell)"
+Copy-Item .env.example .env
 ```
 
 !!! warning ".env is gitignored"
@@ -82,15 +80,7 @@ cp .env.example .env
 | `HF_TOKEN` | *(empty)* | [HuggingFace access token](https://huggingface.co/settings/tokens) (needed for gated datasets) |
 | `VITE_API_PROXY_TARGET` | `http://api:8000` | API proxy target for Vite dev server |
 | `VITE_DOCS_PROXY_TARGET` | `http://docs:8000` | Docs proxy target for Vite dev server |
-
-**Building Docker images:**
-
-```bash
-make docker           # Build API image for this machine
-make docker-frontend  # Build frontend image for this machine
-make docker-all       # Build all images for this machine
-make docker-push      # Build all images for amd64+arm64 and push to registry
-```
+| `VITE_DOCS_PORT` | `8080` | Docs port for Vite dev server (must match `DOCS_PORT`) |
 
 **Persistent volumes:**
 
@@ -105,55 +95,50 @@ make docker-push      # Build all images for amd64+arm64 and push to registry
 
 ## Option B — Local development
 
-Preferred if you are actively modifying the codebase and want to avoid Docker overhead.
+Preferred if you are actively editing the codebase. Installs dependencies locally for IDE support, linting, and direct CLI usage. Services still run via Docker Compose.
 
 !!! info "Prerequisites"
 
     | Requirement | Version |
     |---|---|
-    | :material-language-python: Python | 3.10 – 3.13 |
+    | :material-package-variant-closed: uv | 0.5.3+ |
+    | :material-language-python: CPython | 3.11 – 3.13 (uv-managed preferred) |
     | :material-nodejs: Node.js | 20+ |
-    | :material-database: Redis | 7+ (local or Docker) |
+    | :material-docker: Docker Desktop / Docker Engine | Current |
     | :material-expansion-card: CUDA *(optional)* | For GPU acceleration |
 
-### 1. Install all dependencies
+### 1. Bootstrap the project
 
-```bash title="Full setup (Python + frontend)"
-make setup
+```bash title="Install the managed Python and sync the locked environment"
+uv python install
+uv sync --locked
 ```
 
-This runs `setup.sh`, which uses [`uv`](https://github.com/astral-sh/uv) (with a pip fallback) to install the `intellifl` package and all Python dependencies, then installs the frontend npm packages.
+```bash title="Full setup (datasets + frontend)"
+uv run intellifl-dev setup
+```
 
-??? tip "Install components separately"
+This keeps local development aligned with the checked-in `uv.lock`, prefers uv-managed CPython, downloads the datasets, and installs frontend npm packages.
 
-    ```bash
-    make setup-python     # Python + intellifl package only
-    make setup-frontend   # npm install for the React UI only
-    ```
+!!! tip "Canonical developer entrypoint"
+    `uv run intellifl-dev <command>` is the supported cross-platform workflow. `make <target>` is still available as a thin convenience wrapper, but it is no longer the source of truth.
 
 ### 2. Start dev servers
 
 ```bash
-make dev
-```
-
-Brings up the full Docker Compose stack (API, frontend, Redis, Celery worker, docs, and Celery monitor) with hot reload enabled. Changes to Python or React source files trigger an automatic reload.
-
-To stop all services:
-
-```bash
-make dev-down
+uv run intellifl-dev dev       # Start Docker Compose stack with hot reload
+uv run intellifl-dev dev-down  # Stop all services
 ```
 
 ### 3. Run a simulation (CLI)
 
 ```bash title="Run the default example simulation"
-make sim
+uv run intellifl-dev sim
 # or:
-python -m intellifl.simulation_runner config/simulation_strategies/example_strategy_config.json
+uv run python -m intellifl.simulation_runner config/simulation_strategies/example_strategy_config.json
 ```
 
-The default config at `config/simulation_strategies/example_strategy_config.json` runs a short FEMNIST simulation with a PID-based defence strategy and an `attack_schedule`.
+The default config at `config/simulation_strategies/example_strategy_config.json` runs a 10-round FEMNIST simulation with a PID-based defence strategy and a comprehensive `attack_schedule` that demonstrates all 11 attack types (one per round).
 
 **CLI arguments:**
 
@@ -189,13 +174,34 @@ out/
 
 ---
 
-## :material-test-tube: Running tests
+## :material-test-tube: Running tests and quality checks
 
-```bash title="Test commands"
-make test    # lint + unit tests
-make lint    # lint only
-make sonar   # lint + tests + SonarQube (Docker)
+```bash title="Quality and test commands"
+uv run intellifl-dev check-env        # Verify uv, Python, Docker
+uv run intellifl-dev lint             # Code quality checks (ruff, ty, eslint)
+uv run intellifl-dev audit            # Security audit with pip-audit
+uv run intellifl-dev frontend-audit   # Fix frontend security vulnerabilities
+uv run intellifl-dev validate         # Quick feedback: lint + unit tests only
+uv run intellifl-dev test             # Full test suite: unit + integration + performance
+uv run intellifl-dev baselines        # Record fast simulation baselines for CI
 ```
+
+!!! tip "Security scanning"
+    `uv run intellifl-dev audit` runs `pip-audit` to scan for known vulnerabilities in Python dependencies. `uv run intellifl-dev frontend-audit` handles npm audit fixes.
+
+```bash title="Maintenance commands"
+uv run intellifl-dev upgrade       # Update all dependencies to latest versions
+uv run intellifl-dev clean         # Remove build artifacts and caches
+uv run intellifl-dev reset         # Clean artifacts AND experiment results (out/)
+uv run intellifl-dev deps          # Show dependency tree
+uv run intellifl-dev docs          # Serve documentation locally (Zensical)
+uv run intellifl-dev cache-dir     # Show uv's cache location
+uv run intellifl-dev cache-prune   # Remove unused uv cache entries
+uv run intellifl-dev yolo          # Nuke and rebuild: clean → setup → upgrade
+```
+
+!!! tip "uv cache hygiene"
+    Keep uv's default shared cache unless you have a strong reason to move it. `uv run intellifl-dev cache-prune` is safe to run periodically on developer machines. In CI, prefer `uv cache prune --ci`.
 
 ---
 
@@ -216,9 +222,9 @@ If you see "Address already in use", either:
    taskkill /PID <PID> /F
    ```
 
-2. Or change the port via environment variable:
+2. Or change the port in `.env`, then re-run:
    ```bash
-   API_PORT=8001 make dev
+   uv run intellifl-dev dev
    ```
 
 ??? question "Redis connection refused"
@@ -248,8 +254,19 @@ If you see "Address already in use", either:
     If a dataset fails to download (network timeout or image corruption), clear the cache and retry:
 
     ```bash
-    make clean   # Remove build artifacts and caches
-    make sim     # Re-run the simulation
+    uv run intellifl-dev clean   # Remove build artifacts and caches
+    uv run intellifl-dev sim     # Re-run the simulation
     ```
 
     HuggingFace datasets are cached in `cache/huggingface/` (configurable via `HF_HOME` env var).
+
+??? question "Frontend linting or npm errors (missing modules)"
+
+    If ESLint fails with "Cannot find module" or npm operations fail mysteriously, `node_modules` may be corrupted (especially on WSL or cross-filesystem setups):
+
+    ```bash
+    rm -rf frontend/node_modules
+    npm install
+    ```
+
+    This clears and reinstalls from `package-lock.json`. A plain `npm install` won't fix corruption because npm caches metadata — a full delete is required.
