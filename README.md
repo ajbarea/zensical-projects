@@ -78,8 +78,18 @@ This repository archives the documentation for various projects I've built using
 
 **Federated learning project documentation**
 
-- 📚 [Documentation Website](https://ajbarea.github.io/vFL/)
-- 💻 [GitHub Repository](https://github.com/ajbarea/vFL)
+- 🚀 [Get Started](vfl/docs/getting-started.md) — Install and run your first simulation
+- 🧭 [CLI Reference](vfl/docs/cli.md) — Command overview and examples
+- 🏗️ [Architecture](vfl/docs/architecture.md) — Rust core, Python bridge, and execution flow
+- ⚙️ [Configuration](vfl/docs/configuration.md) — Runtime settings and defaults
+- 🛡️ [Strategies](vfl/docs/strategies.md) — Aggregation strategies and behavior
+- ⚡ [Attacks](vfl/docs/attacks.md) — Fault and adversarial scenario modeling
+- 📡 [API Reference](vfl/docs/api.md) — Programmatic interface details
+- 📊 [Convergence](vfl/docs/convergence.md) — Stability and convergence notes
+- 🏁 [Benchmarks](vfl/docs/benchmarks.md) — Performance and scaling observations
+- 🧠 [Skills](vfl/docs/skills.md) — Project skill documentation
+
+**Tech Stack:** Rust · Python · pyo3 · Zensical
 
 ---
 
@@ -123,6 +133,8 @@ zensical-projects/
 │   ├── docs/                    # Zensical documentation site
 │   ├── src/                     # Signal processing, gesture classification, MIDI engine
 │   └── data/                    # Playlists and gesture models
+├── vfl/
+│   └── docs/                    # Zensical documentation site
 └── README.md
 ```
 
