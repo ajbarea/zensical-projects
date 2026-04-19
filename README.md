@@ -24,6 +24,7 @@ This repository archives the documentation for various projects I've built using
 | Project | Documentation |
 |---------|---|
 | **InteFL** | [ajbarea.github.io/phalanx-fl](https://ajbarea.github.io/phalanx-fl/) |
+| **VelocityFL** | [ajbarea.github.io/vFL](https://ajbarea.github.io/vFL/) |
 | **Kourai Khryseai** | [ajbarea.github.io/kourai-khryseai](https://ajbarea.github.io/kourai-khryseai/) |
 | **Cosmic Horror** | [victor-lockwood.github.io/Hackathon-2026-Cosmic-Horror](https://victor-lockwood.github.io/Hackathon-2026-Cosmic-Horror/) |
 
@@ -70,6 +71,15 @@ This repository archives the documentation for various projects I've built using
 | 📜 | **Mneme** | Scribe — generates conventional commit messages from diffs | :10005 |
 
 **Tech Stack:** A2A Protocol · LiteLLM · FastAPI · MCP · OpenTelemetry · Docker · uv · Python 3.12+
+
+---
+
+### VelocityFL
+
+**Federated learning project documentation**
+
+- 📚 [Documentation Website](https://ajbarea.github.io/vFL/)
+- 💻 [GitHub Repository](https://github.com/ajbarea/vFL)
 
 ---
 
