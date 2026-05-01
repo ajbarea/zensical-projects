@@ -25,6 +25,7 @@ This repository archives the documentation for various projects I've built using
 |---------|---|
 | **InteFL** | [ajbarea.github.io/phalanx-fl](https://ajbarea.github.io/phalanx-fl/) |
 | **Kourai Khryseai** | [ajbarea.github.io/kourai-khryseai](https://ajbarea.github.io/kourai-khryseai/) |
+| **Orchestrate Triage** | [ajbarea.github.io/orchestrate-triage](https://ajbarea.github.io/orchestrate-triage/) |
 | **Cosmic Horror** | [victor-lockwood.github.io/Hackathon-2026-Cosmic-Horror](https://victor-lockwood.github.io/Hackathon-2026-Cosmic-Horror/) |
 
 ---
@@ -73,6 +74,31 @@ This repository archives the documentation for various projects I've built using
 
 ---
 
+### Orchestrate Triage
+
+**Multi-domain support-triage AI agent for the HackerRank Orchestrate hackathon (May 2026)**
+
+- 🚀 [Get Started](orchestrate-triage/docs/getting-started.md) — Install with `uv`, configure `ANTHROPIC_API_KEY`, run on the sample tickets
+- 💡 [Overview](orchestrate-triage/docs/overview.md) — Problem framing, why corpus-stuffing not RAG, what's deliberately cut
+- 🏗️ [Architecture](orchestrate-triage/docs/architecture/index.md) — System diagram, file map, design pillars
+- 📚 [Corpus & Caching](orchestrate-triage/docs/architecture/corpus.md) — Per-domain stuffing math, stripping, 1h-TTL economics
+- 🛡️ [Prompt-Injection Defense](orchestrate-triage/docs/architecture/safety.md) — Spotlighting, structural sanitization, observed real-case behavior
+- 💰 [Cost & Determinism](orchestrate-triage/docs/architecture/cost.md) — Model-tier strategy, Batch API economics, determinism without temperature
+- 📡 [Reference](orchestrate-triage/docs/reference.md) — Module-by-module API
+
+**The Ecosystems Triaged:**
+
+| Ecosystem | Tokens (after stripping) | Test tickets |
+|-----------|--------------------------|--------------|
+| 🟢 **HackerRank Support** | ~580K | 14 |
+| 🟧 **Claude Help Center** | ~540K | 7 |
+| 🟦 **Visa Support** | ~18K | 6 |
+| ⚫ None / cross-domain | — | 2 |
+
+**Tech Stack:** Claude Opus 4.7 (1M context) · Anthropic Message Batches API (50% off) · prompt caching (1h extended-TTL beta) · pydantic strict-mode tool use · spotlighting for prompt-injection defense · uv · pytest · ruff · Zensical
+
+---
+
 ### Cosmic Horror
 
 **Biological electrical pulses transformed into haunting melodies**
@@ -109,6 +135,10 @@ zensical-projects/
 │   ├── shared/                  # Common config, LLM, tracing
 │   ├── mcp_servers/             # Tool servers (fs, git, shell)
 │   └── tests/                   # Unit & integration tests
+├── orchestrate-triage/
+│   ├── docs/                    # Zensical documentation site
+│   ├── overrides/               # Material theme overrides (OG card)
+│   └── zensical.toml            # Site config (palette, nav, plugins)
 ├── hackathon-2026-cosmic-horror/
 │   ├── docs/                    # Zensical documentation site
 │   ├── src/                     # Signal processing, gesture classification, MIDI engine
