@@ -24,6 +24,7 @@ This repository archives the documentation for various projects I've built using
 | Project | Documentation |
 |---------|---|
 | **InteFL** | [ajbarea.github.io/phalanx-fl](https://ajbarea.github.io/phalanx-fl/) |
+| **VelocityFL** | [ajbarea.github.io/vFL](https://ajbarea.github.io/vFL/) |
 | **Kourai Khryseai** | [ajbarea.github.io/kourai-khryseai](https://ajbarea.github.io/kourai-khryseai/) |
 | **Orchestrate Triage** | [ajbarea.github.io/orchestrate-triage](https://ajbarea.github.io/orchestrate-triage/) |
 | **Cosmic Horror** | [victor-lockwood.github.io/Hackathon-2026-Cosmic-Horror](https://victor-lockwood.github.io/Hackathon-2026-Cosmic-Horror/) |
@@ -45,6 +46,25 @@ This repository archives the documentation for various projects I've built using
 - 📡 [API Reference](intefl/docs/api.md) — REST endpoints for simulations
 
 **Tech Stack:** Flower (FL orchestration) · Ray (compute) · PyTorch · FastAPI · Celery · React · Zensical
+
+---
+
+### VelocityFL
+
+**Rust-backed federated learning core with Python ergonomics — "the uv of FL"**
+
+- 🚀 [Get Started](vfl/docs/getting-started.md) — Install and run your first simulation
+- 🧭 [CLI Reference](vfl/docs/cli.md) — Command overview and examples
+- 🏗️ [Architecture](vfl/docs/architecture.md) — Rust core, PyO3 bridge, and execution flow
+- ⚙️ [Configuration](vfl/docs/configuration.md) — Runtime settings and defaults
+- 🛡️ [Strategies](vfl/docs/strategies.md) — Aggregation strategies (FedAvg, FedProx, Krum, MultiKrum, Bulyan, GeometricMedian)
+- ⚡ [Attacks](vfl/docs/attacks.md) — Adversarial scenario modeling
+- 📡 [API Reference](vfl/docs/api.md) — Programmatic interface details
+- 📊 [Convergence](vfl/docs/convergence.md) — Stability and convergence notes
+- 🏁 [Benchmarks](vfl/docs/benchmarks.md) — Performance and scaling observations
+- 🧠 [Skills](vfl/docs/skills.md) — Project skill documentation
+
+**Tech Stack:** Rust · PyO3 · Python · HuggingFace · PEFT · PyTorch · Zensical
 
 ---
 
@@ -129,6 +149,10 @@ zensical-projects/
 │   ├── docs/                    # Zensical documentation site
 │   ├── src/                     # Flask API, Celery workers, React UI
 │   └── tests/                   # Unit & integration tests
+├── vfl/
+│   ├── docs/                    # Zensical documentation site
+│   ├── overrides/               # Material theme overrides (OG card)
+│   └── zensical.toml            # Site config (palette, nav, plugins)
 ├── kourai-khryseai/
 │   ├── docs/                    # Zensical documentation site
 │   ├── agents/                  # Six specialist agents

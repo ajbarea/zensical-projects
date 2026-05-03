@@ -1,0 +1,89 @@
+[project]
+site_name = "VelocityFL"
+site_description = "The uv of Federated Learning — Rust-backed orchestration with Python ergonomics"
+site_author = "AJ Barea"
+site_url = "https://ajbarea.github.io/vFL/"
+repo_url = "https://github.com/ajbarea/vFL"
+repo_name = "ajbarea/vFL"
+copyright = "AJ Barea · 2026"
+
+nav = [
+  { "Home" = "index.md" },
+  { "Getting Started" = "getting-started.md" },
+  { "CLI Reference" = "cli.md" },
+  { "Architecture" = "architecture.md" },
+  { "Configuration" = "configuration.md" },
+  { "Strategies" = "strategies.md" },
+  { "Attacks" = "attacks.md" },
+  { "API Reference" = "api.md" },
+  { "Convergence" = "convergence.md" },
+  { "Benchmarks" = "benchmarks.md" },
+  { "Skills" = "skills.md" },
+]
+
+extra_css = ["style.css"]
+extra_javascript = ["javascripts/reveal.js"]
+
+[project.theme]
+name = "material"
+language = "en"
+custom_dir = "overrides"
+
+features = [
+    # Announcement bar
+    "announce.dismiss",
+
+    # Code blocks
+    "content.code.annotate",
+    "content.code.copy",
+    "content.code.select",
+
+    # Content features
+    "content.footnote.tooltips",
+    "content.tabs.link",
+    "content.tooltips",
+
+    # Navigation
+    "navigation.footer",
+    "navigation.indexes",
+    "navigation.instant",
+    "navigation.instant.prefetch",
+    "navigation.instant.progress",
+    "navigation.path",
+    "navigation.sections",
+    "navigation.top",
+    "navigation.tracking",
+
+    # Search
+    "search.highlight",
+    "search.suggest",
+]
+
+[[project.theme.palette]]
+scheme = "slate"
+primary = "deep-purple"
+accent = "purple"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to light mode"
+
+[[project.theme.palette]]
+scheme = "default"
+primary = "deep-purple"
+accent = "purple"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to dark mode"
+
+[project.theme.font]
+text = "Inter"
+code = "JetBrains Mono"
+
+[project.theme.icon]
+logo = "material/scatter-plot"
+
+[project.extra]
+generator = false
+
+[[project.extra.social]]
+icon = "fontawesome/brands/github"
+link = "https://github.com/ajbarea/vFL"
+name = "VelocityFL on GitHub"
