@@ -24,6 +24,7 @@ This repository archives the documentation for various projects I've built using
 | Project | Documentation |
 |---------|---|
 | **InteFL** | [ajbarea.github.io/phalanx-fl](https://ajbarea.github.io/phalanx-fl/) |
+| **VelocityFL** | [ajbarea.github.io/vFL](https://ajbarea.github.io/vFL/) |
 | **Kourai Khryseai** | [ajbarea.github.io/kourai-khryseai](https://ajbarea.github.io/kourai-khryseai/) |
 | **Orchestrate Triage** | [ajbarea.github.io/orchestrate-triage](https://ajbarea.github.io/orchestrate-triage/) |
 | **Cosmic Horror** | [victor-lockwood.github.io/Hackathon-2026-Cosmic-Horror](https://victor-lockwood.github.io/Hackathon-2026-Cosmic-Horror/) |
